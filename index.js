@@ -72,6 +72,26 @@ async (req, res) => {
   res.status(201).json(newTalker);
 });
 
+app.put('/talker/:id', 
+validateToken, 
+validateName,
+validateAge, 
+validateTalk, 
+validateWatchedAt, 
+validateRate, 
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await readTalkers();
+
+  const getIndexTalker = talkers.findIndex((talker) => talker.id === Number(id));
+  if (getIndexTalker === -1) return res.status(404).json({ message: 'Talker não encontrado' });
+
+  talkers[getIndexTalker] = { ...talkers[getIndexTalker], name, age, talk };
+  await writeTalkers(talkers);
+  res.status(200).json(talkers[getIndexTalker]);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
