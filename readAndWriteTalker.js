@@ -11,6 +11,11 @@ async function readTalkers() {
   }
 }
 
+async function writeTalkers(data) {
+  fs.writeFile(ARQUIVO, JSON.stringify(data));
+}
+
 module.exports = {
   readTalkers,
+  writeTalkers,
 };
