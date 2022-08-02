@@ -92,6 +92,17 @@ async (req, res) => {
   res.status(200).json(talkers[getIndexTalker]);
 });
 
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readTalkers();
+  const getIndexTalker = talkers.findIndex((talker) => talker.id === Number(id));
+  if (getIndexTalker === -1) return res.status(404).json({ message: 'Talker não encontrado' });
+
+  const removeTalker = talkers.filter((talker) => talker.id !== Number(id));
+  await writeTalkers(removeTalker);
+  res.status(204).end();
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
